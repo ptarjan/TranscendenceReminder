@@ -1,0 +1,7 @@
+## Interface: 120001
+## Title: TranscendenceReminder
+## Author: ptarjan
+## Version: 1.0.0
+## Notes: Reminds you to place Transcendence before a pull.
+
+TranscendenceReminder.lua
