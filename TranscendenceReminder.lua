@@ -13,7 +13,7 @@ end
 -- =====================================================
 
 local banner = CreateFrame("Frame", "TranscendenceReminderBanner", UIParent, "BackdropTemplate")
-banner:SetSize(420, 70)
+banner:SetSize(500, 70)
 banner:SetPoint("CENTER", UIParent, "CENTER", 0, 200)
 banner:SetFrameStrata("HIGH")
 banner:EnableMouse(false)
@@ -26,16 +26,16 @@ banner:SetBackdropColor(0.15, 0.4, 0.15, 0.9)
 banner:SetBackdropBorderColor(0, 1, 0.5, 1)
 banner:Hide()
 
-local icon1 = banner:CreateTexture(nil, "OVERLAY")
-icon1:SetSize(48, 48)
-icon1:SetPoint("LEFT", banner, "LEFT", 12, 0)
-icon1:SetTexture("Interface\\Icons\\Monk_Ability_Transcendence")
-
 local text = banner:CreateFontString(nil, "OVERLAY")
 text:SetFont("Fonts\\FRIZQT__.TTF", 28, "OUTLINE")
-text:SetPoint("LEFT", icon1, "RIGHT", 12, 0)
+text:SetPoint("CENTER", banner, "CENTER", 0, 0)
 text:SetText("Place Transcendence!")
 text:SetTextColor(0.3, 1, 0.6)
+
+local icon1 = banner:CreateTexture(nil, "OVERLAY")
+icon1:SetSize(48, 48)
+icon1:SetPoint("RIGHT", text, "LEFT", -12, 0)
+icon1:SetTexture("Interface\\Icons\\Monk_Ability_Transcendence")
 
 local icon2 = banner:CreateTexture(nil, "OVERLAY")
 icon2:SetSize(48, 48)
