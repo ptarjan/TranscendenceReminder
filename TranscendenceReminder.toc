@@ -4,5 +4,6 @@
 ## Author: ptarjan
 ## Version: 1.0.0
 ## Notes: Reminds you to place Transcendence before a pull.
+## X-Curse-Project-ID: 1512696
 
 TranscendenceReminder.lua
