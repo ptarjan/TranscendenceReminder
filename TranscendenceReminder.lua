@@ -12,11 +12,13 @@ end
 -- Banner Frame
 -- =====================================================
 
-local banner = CreateFrame("Frame", "TranscendenceReminderBanner", UIParent, "BackdropTemplate")
+local banner = CreateFrame("Button", "TranscendenceReminderBanner", UIParent, "SecureActionButtonTemplate, BackdropTemplate")
 banner:SetSize(500, 70)
 banner:SetPoint("CENTER", UIParent, "CENTER", 0, 200)
 banner:SetFrameStrata("HIGH")
-banner:EnableMouse(false)
+banner:SetAttribute("type", "spell")
+banner:SetAttribute("spell", "Transcendence")
+banner:RegisterForClicks("AnyUp", "AnyDown")
 banner:SetBackdrop({
     bgFile = "Interface\\Buttons\\WHITE8x8",
     edgeFile = "Interface\\Buttons\\WHITE8x8",
