@@ -48,33 +48,20 @@ icon2:SetTexture("Interface\\Icons\\Monk_Ability_Transcendence")
 -- Animations (pulse + glow like Soulstone Reminder)
 -- =====================================================
 
-local pulseAG = banner:CreateAnimationGroup()
-pulseAG:SetLooping("REPEAT")
-do
-    local up = pulseAG:CreateAnimation("Scale")
-    up:SetScale(1.015, 1.015)
-    up:SetDuration(0.8)
-    up:SetOrder(1)
-
-    local down = pulseAG:CreateAnimation("Scale")
-    down:SetScale(0.985, 0.985)
-    down:SetDuration(0.8)
-    down:SetOrder(2)
-end
-
 local glowAG = banner:CreateAnimationGroup()
 glowAG:SetLooping("REPEAT")
 do
     local a1 = glowAG:CreateAnimation("Alpha")
     a1:SetFromAlpha(1)
-    a1:SetToAlpha(0.6)
-    a1:SetDuration(0.6)
+    a1:SetToAlpha(0.5)
+    a1:SetDuration(0.8)
     a1:SetOrder(1)
+    a1:SetSmoothing("IN_OUT")
 
     local a2 = glowAG:CreateAnimation("Alpha")
-    a2:SetFromAlpha(0.6)
+    a2:SetFromAlpha(0.5)
     a2:SetToAlpha(1)
-    a2:SetDuration(0.6)
+    a2:SetDuration(0.8)
     a2:SetOrder(2)
 end
 
@@ -84,7 +71,6 @@ end
 
 local function ShowBanner()
     banner:Show()
-    pulseAG:Play()
     glowAG:Play()
     PlaySound(8959)
     DEFAULT_CHAT_FRAME:AddMessage("|cff00ff88[TranscendenceReminder]|r Place Transcendence!")
@@ -92,9 +78,7 @@ end
 
 local function HideBanner()
     banner:Hide()
-    if pulseAG:IsPlaying() then pulseAG:Stop() end
     if glowAG:IsPlaying() then glowAG:Stop() end
-    banner:SetScale(1)
     banner:SetAlpha(1)
 end
 
