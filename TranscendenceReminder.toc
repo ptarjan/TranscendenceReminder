@@ -1,4 +1,4 @@
-## Interface: 120001
+## Interface: 120005
 ## Title: Transcendence Reminder
 ## IconTexture: Interface\Icons\Monk_Ability_Transcendence
 ## Author: ptarjan
