@@ -69,17 +69,39 @@ end
 -- Show / Hide
 -- =====================================================
 
+-- The banner is a SecureActionButton (click it to cast Transcendence), so it
+-- cannot be :Show()/:Hide()'d while in combat lockdown — doing so triggers an
+-- ADDON_ACTION_BLOCKED error. We track the desired state and, during combat,
+-- approximate it with alpha; the real Show/Hide is reconciled once combat ends.
+local bannerShown = false
+
+local function ApplyBanner()
+    if InCombatLockdown() then
+        if not bannerShown and glowAG:IsPlaying() then glowAG:Stop() end
+        banner:SetAlpha(bannerShown and 1 or 0)
+        return
+    end
+    if bannerShown then
+        banner:SetAlpha(1)
+        banner:Show()
+        if not glowAG:IsPlaying() then glowAG:Play() end
+    else
+        if glowAG:IsPlaying() then glowAG:Stop() end
+        banner:SetAlpha(1)
+        banner:Hide()
+    end
+end
+
 local function ShowBanner()
-    banner:Show()
-    glowAG:Play()
+    bannerShown = true
+    ApplyBanner()
     PlaySound(8959)
     DEFAULT_CHAT_FRAME:AddMessage("|cff00ff88[TranscendenceReminder]|r Place Transcendence!")
 end
 
 local function HideBanner()
-    banner:Hide()
-    if glowAG:IsPlaying() then glowAG:Stop() end
-    banner:SetAlpha(1)
+    bannerShown = false
+    ApplyBanner()
 end
 
 local function UpdateVisibility()
@@ -119,6 +141,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
         HideBanner()
     elseif event == "PLAYER_REGEN_ENABLED" then
         warned = false
+        ApplyBanner()  -- reconcile any Show/Hide that was blocked during combat
     elseif event == "UNIT_AURA" then
         local unit = ...
         if unit == "player" and readyCheckActive then

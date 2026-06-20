@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.6
+- Fix a UI error that could appear when the reminder tried to hide or show during combat. The banner now waits until combat ends to update, so pulling mid–ready check no longer throws an error.
+
 ## 1.0.5
 - Update for WoW 12.0.5
 
