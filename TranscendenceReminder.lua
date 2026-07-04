@@ -26,7 +26,8 @@ banner:SetBackdrop({
 })
 banner:SetBackdropColor(0.15, 0.4, 0.15, 0.9)
 banner:SetBackdropBorderColor(0, 1, 0.5, 1)
-banner:Hide()
+banner:SetAlpha(0)
+banner:EnableMouse(false)
 
 local text = banner:CreateFontString(nil, "OVERLAY")
 text:SetFont("Fonts\\FRIZQT__.TTF", 28, "OUTLINE")
@@ -71,24 +72,20 @@ end
 
 -- The banner is a SecureActionButton (click it to cast Transcendence), so it
 -- cannot be :Show()/:Hide()'d while in combat lockdown — doing so triggers an
--- ADDON_ACTION_BLOCKED error. We track the desired state and, during combat,
--- approximate it with alpha; the real Show/Hide is reconciled once combat ends.
+-- ADDON_ACTION_BLOCKED error. Instead it stays permanently shown and
+-- visibility is faked with alpha + mouse input, both of which are combat-legal
+-- — so a ready check that fires mid-combat still displays the banner.
 local bannerShown = false
 
 local function ApplyBanner()
-    if InCombatLockdown() then
-        if not bannerShown and glowAG:IsPlaying() then glowAG:Stop() end
-        banner:SetAlpha(bannerShown and 1 or 0)
-        return
-    end
     if bannerShown then
         banner:SetAlpha(1)
-        banner:Show()
+        banner:EnableMouse(true)
         if not glowAG:IsPlaying() then glowAG:Play() end
     else
         if glowAG:IsPlaying() then glowAG:Stop() end
-        banner:SetAlpha(1)
-        banner:Hide()
+        banner:SetAlpha(0)
+        banner:EnableMouse(false)
     end
 end
 
@@ -127,8 +124,7 @@ end
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("READY_CHECK")
 frame:RegisterEvent("READY_CHECK_FINISHED")
-frame:RegisterEvent("PLAYER_REGEN_ENABLED")
-frame:RegisterEvent("UNIT_AURA")
+frame:RegisterUnitEvent("UNIT_AURA", "player")
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "READY_CHECK" then
         if IsInRaid() then
@@ -139,12 +135,8 @@ frame:SetScript("OnEvent", function(self, event, ...)
     elseif event == "READY_CHECK_FINISHED" then
         readyCheckActive = false
         HideBanner()
-    elseif event == "PLAYER_REGEN_ENABLED" then
-        warned = false
-        ApplyBanner()  -- reconcile any Show/Hide that was blocked during combat
     elseif event == "UNIT_AURA" then
-        local unit = ...
-        if unit == "player" and readyCheckActive then
+        if readyCheckActive then
             UpdateVisibility()
         end
     end
