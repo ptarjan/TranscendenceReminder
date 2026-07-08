@@ -71,21 +71,26 @@ end
 -- =====================================================
 
 -- The banner is a SecureActionButton (click it to cast Transcendence), so it
--- cannot be :Show()/:Hide()'d while in combat lockdown — doing so triggers an
--- ADDON_ACTION_BLOCKED error. Instead it stays permanently shown and
--- visibility is faked with alpha + mouse input, both of which are combat-legal
+-- cannot be :Show()/:Hide()'d while in combat lockdown. Instead it stays
+-- permanently shown and visibility is faked with alpha, which is combat-legal
 -- — so a ready check that fires mid-combat still displays the banner.
+--
+-- EnableMouse is ALSO protected on a secure button during combat lockdown
+-- (confirmed via ADDON_ACTION_BLOCKED in the wild), so the mouse state is
+-- only applied out of combat and reconciled on PLAYER_REGEN_ENABLED. Mid-
+-- combat the banner is visual-only; click-to-cast re-arms when combat drops.
 local bannerShown = false
 
 local function ApplyBanner()
     if bannerShown then
         banner:SetAlpha(1)
-        banner:EnableMouse(true)
         if not glowAG:IsPlaying() then glowAG:Play() end
     else
         if glowAG:IsPlaying() then glowAG:Stop() end
         banner:SetAlpha(0)
-        banner:EnableMouse(false)
+    end
+    if not InCombatLockdown() then
+        banner:EnableMouse(bannerShown)
     end
 end
 
@@ -124,6 +129,7 @@ end
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("READY_CHECK")
 frame:RegisterEvent("READY_CHECK_FINISHED")
+frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 frame:RegisterUnitEvent("UNIT_AURA", "player")
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "READY_CHECK" then
@@ -135,6 +141,9 @@ frame:SetScript("OnEvent", function(self, event, ...)
     elseif event == "READY_CHECK_FINISHED" then
         readyCheckActive = false
         HideBanner()
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        -- Apply the mouse state that couldn't be changed during combat.
+        banner:EnableMouse(bannerShown)
     elseif event == "UNIT_AURA" then
         if readyCheckActive then
             UpdateVisibility()

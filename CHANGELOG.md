@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.8
+- Fix a blocked-action error when the banner appeared or disappeared during combat. The banner still shows and hides correctly mid-combat; clicking it to place Transcendence re-enables as soon as combat ends.
+
 ## 1.0.7
 - The reminder banner now appears even when the ready check happens while you're in combat (it previously stayed invisible until combat ended)
 - Update for WoW 12.0.7
