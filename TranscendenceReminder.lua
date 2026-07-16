@@ -5,7 +5,10 @@ local warned = false
 local readyCheckActive = false
 
 local function HasTranscendence()
-    return AuraUtil.FindAuraByName("Transcendence", "player")
+    -- 12.1: aura APIs hard-error while auras are secret (combat/encounters).
+    -- Treat unreadable as "has it" so the banner never nags mid-fight.
+    local ok, aura = pcall(AuraUtil.FindAuraByName, "Transcendence", "player")
+    return not ok or aura
 end
 
 -- =====================================================

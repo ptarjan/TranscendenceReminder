@@ -1,8 +1,8 @@
-## Interface: 120007
+## Interface: 120007, 120100
 ## Title: Transcendence Reminder
 ## IconTexture: Interface\Icons\Monk_Ability_Transcendence
 ## Author: ptarjan
-## Version: 1.0.8
+## Version: 1.0.9
 ## Notes: Reminds you to place Transcendence before a pull.
 ## X-Curse-Project-ID: 1512696
 

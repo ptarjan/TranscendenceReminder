@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.9
+- Ready for WoW 12.1.0
+- The Transcendence check can no longer fail during fights on 12.1, where buff information is sometimes hidden from addons — the reminder stays quiet until it can see your buffs again
+
 ## 1.0.8
 - Fix a blocked-action error when the banner appeared or disappeared during combat. The banner still shows and hides correctly mid-combat; clicking it to place Transcendence re-enables as soon as combat ends.
 
